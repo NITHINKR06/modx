@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Mail, ArrowLeft, Send } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -9,6 +11,7 @@ const ForgotPassword: React.FC = () => {
     const [sent, setSent] = useState(false);
     const [animReady, setAnimReady] = useState(false);
     const mousePos = useMousePosition();
+    const { resetPassword } = useAuth();
 
     useEffect(() => {
         setTimeout(() => setAnimReady(true), 50);
@@ -17,9 +20,18 @@ const ForgotPassword: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        await new Promise((r) => setTimeout(r, 1200));
-        setLoading(false);
-        setSent(true);
+        try {
+            await resetPassword(email);
+            setSent(true);
+        } catch (err: any) {
+            const msg =
+                err?.code === "auth/user-not-found"
+                    ? "No account found with this email"
+                    : err?.message || "Failed to send reset email";
+            toast.error(msg);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

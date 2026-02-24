@@ -1,226 +1,120 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
 import { AvatarIcon } from "@/components/IconAvatar";
-import {
-  TrendingUp,
-  Users,
-  Rocket,
-  Calendar,
-  BarChart3,
-  Activity,
-} from "lucide-react";
+import { TrendingUp, Users, Rocket, Calendar, Activity, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserProjects, type ProjectData } from "@/lib/firestore";
 
 const Dashboard: React.FC = () => {
+  const { user } = useAuth();
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    getUserProjects(user.uid)
+      .then(setProjects)
+      .catch((e) => console.error(e))
+      .finally(() => setLoading(false));
+  }, [user]);
+
+  const total = projects.length;
+  const inProg = projects.filter((p) => p.status === "In Progress").length;
+  const completed = projects.filter((p) => p.status === "Completed").length;
+  const planning = projects.filter((p) => p.status === "Planning").length;
+  const teamCount = projects.reduce((a, p) => a + (p.teamMembers?.length || 0), 0);
+  const recent = projects.slice(0, 4);
+
   const stats = [
-    {
-      icon: Rocket,
-      label: "Total Projects",
-      value: "12",
-      change: "+3 this month",
-      color: "from-primary to-blue-600",
-    },
-    {
-      icon: Users,
-      label: "Team Members",
-      value: "48",
-      change: "+8 new members",
-      color: "from-accent to-blue-400",
-    },
-    {
-      icon: TrendingUp,
-      label: "In Progress",
-      value: "7",
-      change: "2 completed",
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      icon: Calendar,
-      label: "Events",
-      value: "5",
-      change: "Next: Hackathon",
-      color: "from-orange-500 to-red-500",
-    },
+    { icon: Rocket, label: "Total Projects", value: total, sub: `${inProg} in progress`, color: "from-primary to-blue-600" },
+    { icon: Users, label: "Team Members", value: teamCount, sub: "Across projects", color: "from-accent to-blue-400" },
+    { icon: TrendingUp, label: "In Progress", value: inProg, sub: `${completed} completed`, color: "from-purple-500 to-pink-500" },
+    { icon: Calendar, label: "Planning", value: planning, sub: "Ready to start", color: "from-orange-500 to-red-500" },
   ];
 
-  const recentProjects = [
-    {
-      name: "AI Learning Platform",
-      status: "In Progress",
-      team: 5,
-      progress: 75,
-    },
-    {
-      name: "Eco Dashboard",
-      status: "In Progress",
-      team: 3,
-      progress: 60,
-    },
-    {
-      name: "Community Connect",
-      status: "Planning",
-      team: 4,
-      progress: 25,
-    },
-    {
-      name: "Neural Networks",
-      status: "In Progress",
-      team: 6,
-      progress: 85,
-    },
-  ];
-
-  const activityFeed = [
-    {
-      user: "Sarah Chen",
-      action: "Started new project",
-      project: "AI Learning Platform",
-      time: "2 hours ago",
-    },
-    {
-      user: "Alex Kumar",
-      action: "Completed milestone",
-      project: "Neural Networks",
-      time: "4 hours ago",
-    },
-    {
-      user: "Jessica Park",
-      action: "Joined team",
-      project: "Eco Dashboard",
-      time: "6 hours ago",
-    },
-    {
-      user: "Michael Zhang",
-      action: "Pushed code",
-      project: "Community Connect",
-      time: "8 hours ago",
-    },
-  ];
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center py-20">
+          <Loader2 size={32} className="animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
       <div className="space-y-8">
-        {/* Header */}
         <div className="reveal">
-          <h1 className="text-4xl font-black text-foreground mb-2">
-            Dashboard
-          </h1>
-          <p className="text-foreground/70">
-            Welcome back! Here's your project overview.
-          </p>
+          <h1 className="text-4xl font-black text-foreground mb-2">Dashboard</h1>
+          <p className="text-foreground/70">Welcome back! Here's your project overview.</p>
         </div>
 
-        {/* Stats Grid */}
+        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, idx) => (
-            <TiltCard
-              key={idx}
-              variant="gradient"
-              className="p-6 reveal cursor-pointer group"
-              style={{ animationDelay: `${idx * 0.05}s` }}
-            >
-              <div
-                className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4 glow-soft group-hover:scale-110 transition-transform duration-300`}
-              >
-                <stat.icon size={24} className="text-white" />
+          {stats.map((s, i) => (
+            <TiltCard key={i} variant="gradient" className="p-6 reveal" style={{ animationDelay: `${i * 0.05}s` }}>
+              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center mb-4 glow-soft`}>
+                <s.icon size={24} className="text-white" />
               </div>
-              <p className="text-sm text-foreground/70 mb-1">{stat.label}</p>
-              <div className="flex items-baseline gap-2">
-                <h3 className="text-3xl font-bold text-foreground">
-                  {stat.value}
-                </h3>
-              </div>
-              <p className="text-xs text-accent mt-2">{stat.change}</p>
+              <p className="text-sm text-foreground/70 mb-1">{s.label}</p>
+              <h3 className="text-3xl font-bold text-foreground">{s.value}</h3>
+              <p className="text-xs text-accent mt-2">{s.sub}</p>
             </TiltCard>
           ))}
         </div>
 
-        {/* Projects and Activity */}
+        {/* Recent Projects */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Projects */}
           <div className="lg:col-span-2 reveal">
-            <TiltCard variant="glass" className="p-8 cursor-pointer">
+            <TiltCard variant="glass" className="p-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground">
-                  Recent Projects
-                </h2>
-                <button className="text-primary font-semibold hover:gap-1 inline-flex items-center gap-0.5 transition-all duration-300">
-                  View All →
-                </button>
+                <h2 className="text-2xl font-bold text-foreground">Recent Projects</h2>
+                <Link to="/dashboard/projects" className="text-primary font-semibold inline-flex items-center gap-0.5">View All →</Link>
               </div>
-
-              <div className="space-y-4">
-                {recentProjects.map((project, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 border border-border/50 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                          {project.name}
-                        </h3>
-                        <p className="text-sm text-foreground/70">
-                          {project.team} team members
-                        </p>
+              {recent.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-foreground/50 mb-4">No projects yet</p>
+                  <Link to="/dashboard/upload"><MagneticButton variant="primary" size="md"><Rocket size={16} /> Create First Project</MagneticButton></Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recent.map((p, i) => (
+                    <div key={p.id || i} className="p-4 border border-border/50 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group cursor-pointer">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{p.title}</h3>
+                          <p className="text-sm text-foreground/70">{p.teamMembers?.length || 0} team members</p>
+                        </div>
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${p.status === "In Progress" ? "bg-blue-100 text-primary dark:bg-blue-900/30" : p.status === "Completed" ? "bg-green-100 text-green-700" : "bg-foreground/10 text-foreground/70"}`}>{p.status}</span>
                       </div>
-                      <span
-                        className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors ${project.status === "In Progress"
-                            ? "bg-blue-100 text-primary dark:bg-blue-900/30"
-                            : "bg-foreground/10 text-foreground/70"
-                          }`}
-                      >
-                        {project.status}
-                      </span>
+                      <div className="w-full bg-foreground/10 rounded-full h-2 overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500" style={{ width: `${p.progress}%` }} />
+                      </div>
+                      <p className="text-xs text-foreground/60 mt-2">{p.progress}% complete</p>
                     </div>
-
-                    {/* Progress Bar */}
-                    <div className="w-full bg-foreground/10 rounded-full h-2 overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
-                        style={{ width: `${project.progress}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-foreground/60 mt-2">
-                      {project.progress}% complete
-                    </p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </TiltCard>
           </div>
 
-          {/* Activity Feed */}
+          {/* Overview sidebar */}
           <div className="reveal">
-            <TiltCard variant="glass" className="p-8 h-full cursor-pointer">
+            <TiltCard variant="glass" className="p-8 h-full">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground">Activity</h2>
+                <h2 className="text-2xl font-bold text-foreground">Overview</h2>
                 <Activity size={20} className="text-primary" />
               </div>
-
               <div className="space-y-4">
-                {activityFeed.map((activity, idx) => (
-                  <div
-                    key={idx}
-                    className="pb-4 border-b border-border/50 last:border-0 hover:bg-primary/5 p-2 rounded transition-colors"
-                  >
-                    <div className="flex gap-3">
-                      <AvatarIcon name={activity.user} size="sm" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-foreground">
-                          {activity.user}
-                        </p>
-                        <p className="text-xs text-foreground/70">
-                          {activity.action}
-                        </p>
-                        <p className="text-xs text-accent font-medium">
-                          {activity.project}
-                        </p>
-                        <p className="text-xs text-foreground/60 mt-1">
-                          {activity.time}
-                        </p>
-                      </div>
+                {[{ l: "Completed", c: completed }, { l: "In Progress", c: inProg }, { l: "Planning", c: planning }, { l: "On Hold", c: projects.filter((x) => x.status === "On Hold").length }].map((it, i) => (
+                  <div key={i} className="pb-4 border-b border-border/50 last:border-0">
+                    <div className="flex justify-between mb-2"><span className="text-sm font-medium text-foreground">{it.l}</span><span className="text-sm text-foreground/70">{it.c}</span></div>
+                    <div className="w-full bg-foreground/10 rounded-full h-2">
+                      <div className="h-full bg-gradient-to-r from-primary to-accent rounded-full" style={{ width: total ? `${(it.c / total) * 100}%` : "0%" }} />
                     </div>
                   </div>
                 ))}
@@ -229,79 +123,11 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Chart Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 reveal">
-          <TiltCard variant="glass" className="p-8 cursor-pointer">
-            <h2 className="text-xl font-bold text-foreground mb-6">
-              Project Timeline
-            </h2>
-            <div className="space-y-4">
-              {["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024"].map(
-                (quarter, idx) => (
-                  <div key={idx}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-foreground">
-                        {quarter}
-                      </span>
-                      <span className="text-sm text-foreground/70">
-                        {[8, 12, 15, 10][idx]} projects
-                      </span>
-                    </div>
-                    <div className="w-full bg-foreground/10 rounded-full h-2">
-                      <div
-                        className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500"
-                        style={{ width: `${[53, 80, 100, 67][idx]}%` }}
-                      />
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </TiltCard>
-
-          <TiltCard variant="glass" className="p-8 cursor-pointer">
-            <h2 className="text-xl font-bold text-foreground mb-6">
-              Team Performance
-            </h2>
-            <div className="space-y-4">
-              {[
-                { name: "Engineering", value: 92 },
-                { name: "Design", value: 88 },
-                { name: "Product", value: 85 },
-                { name: "Community", value: 95 },
-              ].map((item, idx) => (
-                <div key={idx}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-foreground">
-                      {item.name}
-                    </span>
-                    <span className="text-sm text-primary font-semibold">
-                      {item.value}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-foreground/10 rounded-full h-2">
-                    <div
-                      className="h-full bg-gradient-to-r from-accent to-primary rounded-full transition-all duration-500"
-                      style={{ width: `${item.value}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TiltCard>
-        </div>
-
-        {/* CTA Section */}
-        <TiltCard variant="gradient" className="p-8 text-center reveal cursor-pointer">
-          <h2 className="text-2xl font-bold text-foreground mb-4">
-            Start a New Project
-          </h2>
-          <p className="text-foreground/70 mb-6">
-            Create and manage your next innovation
-          </p>
-          <MagneticButton variant="primary" size="lg">
-            New Project
-          </MagneticButton>
+        {/* CTA */}
+        <TiltCard variant="gradient" className="p-8 text-center reveal">
+          <h2 className="text-2xl font-bold text-foreground mb-4">Start a New Project</h2>
+          <p className="text-foreground/70 mb-6">Create and manage your next innovation</p>
+          <Link to="/dashboard/upload"><MagneticButton variant="primary" size="lg">New Project</MagneticButton></Link>
         </TiltCard>
       </div>
     </DashboardLayout>

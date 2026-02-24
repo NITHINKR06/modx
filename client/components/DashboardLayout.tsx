@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -13,6 +13,7 @@ import {
   Upload,
   UsersRound,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -24,8 +25,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOutUser } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  const initial = displayName.charAt(0).toUpperCase();
 
   const menuItems = [
     { icon: Home, label: "Overview", path: "/dashboard" },
@@ -34,6 +40,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     { icon: UsersRound, label: "Teams", path: "/dashboard/teams" },
     { icon: Settings, label: "Settings", path: "/dashboard/settings" },
   ];
+
+  const handleLogout = async () => {
+    await signOutUser();
+    navigate("/login");
+  };
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-white via-blue-50/50 to-white overflow-hidden">
@@ -79,7 +90,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         {/* Sidebar Footer */}
         <div className="border-t border-border/50 p-4">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300"
+          >
             <LogOut size={20} />
             {sidebarOpen && <span className="font-medium">Logout</span>}
           </button>
@@ -98,7 +112,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </button>
 
           <div className="hidden md:flex items-center text-foreground/70">
-            <span>Welcome back, Sarah!</span>
+            <span>Welcome back, {displayName}!</span>
           </div>
 
           <div className="flex items-center gap-6">
@@ -115,7 +129,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-foreground/5 transition-colors"
               >
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center text-white font-bold">
-                  S
+                  {initial}
                 </div>
                 <ChevronDown
                   size={16}
@@ -126,15 +140,26 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
               {profileMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg border border-border/50 shadow-lg overflow-hidden z-50">
-                  <button className="w-full flex items-center gap-3 px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors">
+                  <Link
+                    to="/dashboard/settings"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
+                    onClick={() => setProfileMenuOpen(false)}
+                  >
                     <User size={18} />
                     <span>Profile</span>
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors border-t border-border/50">
+                  </Link>
+                  <Link
+                    to="/dashboard/settings"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors border-t border-border/50"
+                    onClick={() => setProfileMenuOpen(false)}
+                  >
                     <Settings size={18} />
                     <span>Settings</span>
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors border-t border-border/50">
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors border-t border-border/50"
+                  >
                     <LogOut size={18} />
                     <span>Logout</span>
                   </button>

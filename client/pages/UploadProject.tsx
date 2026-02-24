@@ -14,6 +14,10 @@ import {
     FileText,
     Sparkles,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { createProject } from "@/lib/firestore";
+import { toast } from "sonner";
 
 interface TeamMember {
     name: string;
@@ -21,6 +25,7 @@ interface TeamMember {
 }
 
 const UploadProject: React.FC = () => {
+    const { user } = useAuth();
     const [title, setTitle] = useState("");
     const [shortDesc, setShortDesc] = useState("");
     const [detailedDesc, setDetailedDesc] = useState("");
@@ -34,6 +39,7 @@ const UploadProject: React.FC = () => {
     const [demoLink, setDemoLink] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState("");
 
     // Team member handlers
     const addTeamMember = () => {
@@ -96,10 +102,48 @@ const UploadProject: React.FC = () => {
     // Submit
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!user) return;
         setSubmitting(true);
-        await new Promise((r) => setTimeout(r, 1500));
-        setSubmitting(false);
-        setSubmitted(true);
+
+        try {
+            // Step 1: Upload images to Cloudinary
+            const imageUrls: string[] = [];
+            if (images.length > 0) {
+                setUploadProgress(`Uploading images (0/${images.length})...`);
+                for (let i = 0; i < images.length; i++) {
+                    setUploadProgress(`Uploading images (${i + 1}/${images.length})...`);
+                    const url = await uploadToCloudinary(images[i].file);
+                    imageUrls.push(url);
+                }
+            }
+
+            // Step 2: Save project to Firestore
+            setUploadProgress("Saving project...");
+            await createProject({
+                title,
+                shortDesc,
+                detailedDesc,
+                teamMembers: teamMembers.filter((m) => m.name.trim()),
+                technologies,
+                images: imageUrls,
+                githubLink,
+                demoLink,
+                ownerId: user.uid,
+                ownerName: user.displayName || user.email || "Unknown",
+                status: "Planning",
+                progress: 0,
+            });
+
+            setSubmitting(false);
+            setUploadProgress("");
+            setSubmitted(true);
+            toast.success("Project submitted successfully!");
+        } catch (err: any) {
+            console.error("Upload error:", err);
+            toast.error(err?.message || "Failed to submit project");
+            setSubmitting(false);
+            setUploadProgress("");
+        }
     };
 
     if (submitted) {
@@ -114,8 +158,7 @@ const UploadProject: React.FC = () => {
                             Project Submitted!
                         </h2>
                         <p className="text-foreground/70 mb-8">
-                            Your project "{title}" has been submitted for review. You'll be
-                            notified once it's approved.
+                            Your project "{title}" has been submitted successfully. You can view it in My Projects.
                         </p>
                         <MagneticButton
                             variant="primary"
@@ -377,7 +420,7 @@ const UploadProject: React.FC = () => {
                             </label>
                         </div>
                         <p className="text-xs text-foreground/40">
-                            Upload screenshots, diagrams, or demo images (PNG, JPG, WebP)
+                            Upload screenshots, diagrams, or demo images (PNG, JPG, WebP). Images will be uploaded to Cloudinary.
                         </p>
                     </TiltCard>
 
@@ -463,7 +506,7 @@ const UploadProject: React.FC = () => {
                                             d="M4 12a8 8 0 018-8v8H4z"
                                         />
                                     </svg>
-                                    Submitting…
+                                    {uploadProgress || "Submitting…"}
                                 </>
                             ) : (
                                 <>

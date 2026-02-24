@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, Rocket } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const Register: React.FC = () => {
     const [form, setForm] = useState({
@@ -18,10 +20,16 @@ const Register: React.FC = () => {
     const [pwdStrength, setPwdStrength] = useState(0);
     const mousePos = useMousePosition();
     const navigate = useNavigate();
+    const { signUp, user } = useAuth();
 
     useEffect(() => {
         setTimeout(() => setAnimReady(true), 50);
     }, []);
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (user) navigate("/dashboard", { replace: true });
+    }, [user, navigate]);
 
     useEffect(() => {
         const p = form.password;
@@ -45,9 +53,21 @@ const Register: React.FC = () => {
         if (form.password !== form.confirm) return;
         if (!agreed) return;
         setLoading(true);
-        await new Promise((r) => setTimeout(r, 1200));
-        setLoading(false);
-        navigate("/dashboard");
+        try {
+            await signUp(form.email, form.password, form.name);
+            toast.success("Account created successfully!");
+            navigate("/dashboard");
+        } catch (err: any) {
+            const msg =
+                err?.code === "auth/email-already-in-use"
+                    ? "This email is already registered"
+                    : err?.code === "auth/weak-password"
+                        ? "Password must be at least 6 characters"
+                        : err?.message || "Registration failed";
+            toast.error(msg);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const passwordsMatch = form.confirm === "" || form.password === form.confirm;
@@ -174,8 +194,8 @@ const Register: React.FC = () => {
                                     onChange={handleChange}
                                     placeholder="Repeat your password"
                                     className={`w-full pl-11 pr-12 py-3.5 rounded-xl bg-background/60 border outline-none text-foreground placeholder-foreground/30 transition-all duration-300 text-sm ${passwordsMatch
-                                            ? "border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
-                                            : "border-red-400 focus:ring-2 focus:ring-red-400/20"
+                                        ? "border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                        : "border-red-400 focus:ring-2 focus:ring-red-400/20"
                                         }`}
                                 />
                                 <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground transition-colors">
