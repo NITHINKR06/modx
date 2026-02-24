@@ -30,6 +30,7 @@ dist-ssr
 # Environment secrets
 .env
 .env.*
+client/.env
 
 # AI / editor tool files
 AGENTS.md
