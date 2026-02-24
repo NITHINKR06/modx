@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Section } from "@/components/Section";
+import { AvatarIcon } from "@/components/IconAvatar";
 import { Heart, Target, Eye, GraduationCap, ArrowRight, Rocket } from "lucide-react";
 
 const About: React.FC = () => {
@@ -12,37 +13,31 @@ const About: React.FC = () => {
     {
       name: "Sarah Chen",
       role: "Founder & President",
-      avatar: "👩‍💼",
       bio: "Visionary leader passionate about student innovation",
     },
     {
       name: "Alex Kumar",
       role: "Vice President",
-      avatar: "👨‍💻",
       bio: "Tech innovator with 5+ projects shipped",
     },
     {
       name: "Jessica Park",
       role: "Design Lead",
-      avatar: "👩‍🎨",
       bio: "Creative designer focused on user experience",
     },
     {
       name: "Michael Zhang",
       role: "Engineering Lead",
-      avatar: "👨‍🔧",
       bio: "Full-stack developer and architecture expert",
     },
     {
       name: "Emma Johnson",
       role: "Community Manager",
-      avatar: "👩‍🤝‍👩",
       bio: "Building connections and fostering collaboration",
     },
     {
       name: "David Singh",
       role: "Outreach Lead",
-      avatar: "👨‍🎓",
       bio: "Bridging gaps between students and industry",
     },
   ];
@@ -89,9 +84,9 @@ const About: React.FC = () => {
   ];
 
   const facultyMembers = [
-    { name: "Dr. Robert Williams", role: "Faculty Advisor", avatar: "👨‍🏫", department: "Computer Science" },
-    { name: "Prof. Anita Patel", role: "Coordinator", avatar: "👩‍🏫", department: "Innovation & Design" },
-    { name: "Dr. Mark Thompson", role: "Mentor", avatar: "👨‍🔬", department: "AI & Machine Learning" },
+    { name: "Dr. Robert Williams", role: "Faculty Advisor", department: "Computer Science" },
+    { name: "Prof. Anita Patel", role: "Coordinator", department: "Innovation & Design" },
+    { name: "Dr. Mark Thompson", role: "Mentor", department: "AI & Machine Learning" },
   ];
 
   return (
@@ -249,8 +244,8 @@ const About: React.FC = () => {
               className="p-8 text-center reveal cursor-pointer group"
               style={{ animationDelay: `${(idx % 3) * 0.1}s` }}
             >
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                {member.avatar}
+              <div className="mb-4 flex justify-center group-hover:scale-110 transition-transform duration-300">
+                <AvatarIcon name={member.name} size="xl" />
               </div>
               <h3 className="text-xl font-bold text-foreground mb-1">
                 {member.name}
@@ -294,7 +289,7 @@ const About: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {facultyMembers.map((member, idx) => (
             <TiltCard key={idx} variant="glass" className="p-8 text-center reveal cursor-pointer group" style={{ animationDelay: `${idx * 0.1}s` }}>
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">{member.avatar}</div>
+              <div className="mb-4 flex justify-center group-hover:scale-110 transition-transform duration-300"><AvatarIcon name={member.name} size="xl" /></div>
               <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
               <p className="text-sm font-semibold text-accent mb-1">{member.role}</p>
               <p className="text-xs text-foreground/50">{member.department}</p>

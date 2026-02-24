@@ -2,6 +2,7 @@ import React from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
+import { AvatarIcon } from "@/components/IconAvatar";
 import {
   TrendingUp,
   Users,
@@ -76,28 +77,24 @@ const Dashboard: React.FC = () => {
       action: "Started new project",
       project: "AI Learning Platform",
       time: "2 hours ago",
-      avatar: "👩‍💼",
     },
     {
       user: "Alex Kumar",
       action: "Completed milestone",
       project: "Neural Networks",
       time: "4 hours ago",
-      avatar: "👨‍💻",
     },
     {
       user: "Jessica Park",
       action: "Joined team",
       project: "Eco Dashboard",
       time: "6 hours ago",
-      avatar: "👩‍🎨",
     },
     {
       user: "Michael Zhang",
       action: "Pushed code",
       project: "Community Connect",
       time: "8 hours ago",
-      avatar: "👨‍🔧",
     },
   ];
 
@@ -169,11 +166,10 @@ const Dashboard: React.FC = () => {
                         </p>
                       </div>
                       <span
-                        className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors ${
-                          project.status === "In Progress"
+                        className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors ${project.status === "In Progress"
                             ? "bg-blue-100 text-primary dark:bg-blue-900/30"
                             : "bg-foreground/10 text-foreground/70"
-                        }`}
+                          }`}
                       >
                         {project.status}
                       </span>
@@ -210,9 +206,7 @@ const Dashboard: React.FC = () => {
                     className="pb-4 border-b border-border/50 last:border-0 hover:bg-primary/5 p-2 rounded transition-colors"
                   >
                     <div className="flex gap-3">
-                      <div className="text-2xl flex-shrink-0">
-                        {activity.avatar}
-                      </div>
+                      <AvatarIcon name={activity.user} size="sm" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-foreground">
                           {activity.user}

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
+import { ProjectIcon } from "@/components/IconAvatar";
 import {
     Rocket,
     Search,
@@ -12,6 +13,13 @@ import {
     Github,
     Calendar,
     Users,
+    Bot,
+    Leaf,
+    Handshake,
+    Brain,
+    CalendarDays,
+    Code,
+    LucideIcon,
 } from "lucide-react";
 
 interface Project {
@@ -22,7 +30,8 @@ interface Project {
     progress: number;
     tech: string[];
     updated: string;
-    image: string;
+    icon: LucideIcon;
+    gradient: string;
 }
 
 const MyProjects: React.FC = () => {
@@ -38,7 +47,8 @@ const MyProjects: React.FC = () => {
             progress: 75,
             tech: ["React", "Python", "TensorFlow"],
             updated: "2 hours ago",
-            image: "🤖",
+            icon: Bot,
+            gradient: "from-violet-500 to-purple-600",
         },
         {
             name: "Eco Dashboard",
@@ -48,7 +58,8 @@ const MyProjects: React.FC = () => {
             progress: 60,
             tech: ["Next.js", "D3.js", "PostgreSQL"],
             updated: "5 hours ago",
-            image: "🌱",
+            icon: Leaf,
+            gradient: "from-emerald-500 to-teal-600",
         },
         {
             name: "Community Connect",
@@ -58,7 +69,8 @@ const MyProjects: React.FC = () => {
             progress: 25,
             tech: ["React Native", "Firebase", "Node.js"],
             updated: "1 day ago",
-            image: "🤝",
+            icon: Handshake,
+            gradient: "from-blue-500 to-cyan-600",
         },
         {
             name: "Neural Networks",
@@ -68,7 +80,8 @@ const MyProjects: React.FC = () => {
             progress: 85,
             tech: ["Python", "PyTorch", "CUDA"],
             updated: "4 hours ago",
-            image: "🧠",
+            icon: Brain,
+            gradient: "from-pink-500 to-rose-600",
         },
         {
             name: "Student Calendar",
@@ -78,7 +91,8 @@ const MyProjects: React.FC = () => {
             progress: 100,
             tech: ["Flutter", "Dart", "Firebase"],
             updated: "1 week ago",
-            image: "📅",
+            icon: CalendarDays,
+            gradient: "from-amber-500 to-orange-600",
         },
         {
             name: "Code Review Bot",
@@ -88,7 +102,8 @@ const MyProjects: React.FC = () => {
             progress: 40,
             tech: ["TypeScript", "OpenAI API", "GitHub API"],
             updated: "3 days ago",
-            image: "🤖",
+            icon: Code,
+            gradient: "from-slate-500 to-gray-600",
         },
     ];
 
@@ -145,8 +160,8 @@ const MyProjects: React.FC = () => {
                                 key={f}
                                 onClick={() => setFilter(f)}
                                 className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${filter === f
-                                        ? "bg-primary text-white"
-                                        : "bg-foreground/5 text-foreground/70 hover:bg-foreground/10"
+                                    ? "bg-primary text-white"
+                                    : "bg-foreground/5 text-foreground/70 hover:bg-foreground/10"
                                     }`}
                             >
                                 {f === "all" ? "All" : f}
@@ -166,8 +181,8 @@ const MyProjects: React.FC = () => {
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="text-4xl group-hover:scale-110 transition-transform duration-300">
-                                        {project.image}
+                                    <div className="group-hover:scale-110 transition-transform duration-300">
+                                        <ProjectIcon icon={project.icon} size="md" gradient={project.gradient} />
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">

@@ -6,6 +6,7 @@ import { MagneticButton } from "@/components/MagneticButton";
 import { TiltCard } from "@/components/TiltCard";
 import { HeroSection } from "@/components/HeroSection";
 import { Section } from "@/components/Section";
+import { AvatarIcon, ProjectIcon } from "@/components/IconAvatar";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
   Zap,
@@ -15,6 +16,11 @@ import {
   Award,
   TrendingUp,
   ArrowRight,
+  Bot,
+  Leaf,
+  Handshake,
+  Brain,
+  LucideIcon,
 } from "lucide-react";
 
 const Index: React.FC = () => {
@@ -56,25 +62,29 @@ const Index: React.FC = () => {
       description:
         "Adaptive AI tutor that personalizes learning paths for students",
       category: "AI/ML",
-      image: "🤖",
+      icon: Bot,
+      gradient: "from-violet-500 to-purple-600",
     },
     {
       title: "Eco Dashboard",
       description: "Real-time environmental impact tracking and visualization",
       category: "Sustainability",
-      image: "🌱",
+      icon: Leaf,
+      gradient: "from-emerald-500 to-teal-600",
     },
     {
       title: "Community Connect",
       description: "Social platform for student collaboration and networking",
       category: "Social Tech",
-      image: "🤝",
+      icon: Handshake,
+      gradient: "from-blue-500 to-cyan-600",
     },
     {
       title: "Neural Networks",
       description: "Advanced ML framework for education and research",
       category: "Research",
-      image: "🧠",
+      icon: Brain,
+      gradient: "from-pink-500 to-rose-600",
     },
   ];
 
@@ -102,19 +112,16 @@ const Index: React.FC = () => {
       name: "Sarah Chen",
       role: "Club President",
       text: "MODX transformed how we approach innovation. It's not just a club, it's a movement.",
-      avatar: "👩‍💼",
     },
     {
       name: "Alex Kumar",
       role: "Project Lead",
       text: "The most supportive community I've been part of. Ideas flourish here.",
-      avatar: "👨‍💻",
     },
     {
       name: "Jessica Park",
       role: "Designer",
       text: "Where creativity meets technology. Every day brings new possibilities.",
-      avatar: "👩‍🎨",
     },
   ];
 
@@ -203,8 +210,8 @@ const Index: React.FC = () => {
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
               <div className="p-4">
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {project.image}
+                <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <ProjectIcon icon={project.icon} size="lg" gradient={project.gradient} />
                 </div>
                 <div className="inline-block px-3 py-1 bg-primary/10 rounded-full mb-4">
                   <span className="text-sm font-semibold text-primary">
@@ -282,7 +289,7 @@ const Index: React.FC = () => {
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="text-4xl">{testimonial.avatar}</div>
+                <AvatarIcon name={testimonial.name} size="md" />
                 <div>
                   <h4 className="font-bold text-foreground">
                     {testimonial.name}

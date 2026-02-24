@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
+import { AvatarIcon } from "@/components/IconAvatar";
 import { Users, UserPlus, Mail, MoreHorizontal, Search } from "lucide-react";
 
 interface Team {
     name: string;
     description: string;
-    members: { name: string; avatar: string; role: string }[];
+    members: { name: string; role: string }[];
     project: string;
     status: "Active" | "Forming" | "Completed";
 }
@@ -20,10 +21,10 @@ const Teams: React.FC = () => {
             name: "Alpha Innovators",
             description: "Building an AI-powered learning platform for adaptive education",
             members: [
-                { name: "Sarah Chen", avatar: "👩‍💼", role: "Lead" },
-                { name: "Alex Kumar", avatar: "👨‍💻", role: "Backend" },
-                { name: "Jessica Park", avatar: "👩‍🎨", role: "Design" },
-                { name: "David Singh", avatar: "👨‍🎓", role: "ML" },
+                { name: "Sarah Chen", role: "Lead" },
+                { name: "Alex Kumar", role: "Backend" },
+                { name: "Jessica Park", role: "Design" },
+                { name: "David Singh", role: "ML" },
             ],
             project: "AI Learning Platform",
             status: "Active",
@@ -32,9 +33,9 @@ const Teams: React.FC = () => {
             name: "Green Coders",
             description: "Developing a real-time environmental impact tracking dashboard",
             members: [
-                { name: "Michael Zhang", avatar: "👨‍🔧", role: "Lead" },
-                { name: "Emma Johnson", avatar: "👩‍🤝‍👩", role: "Frontend" },
-                { name: "Raj Patel", avatar: "👨‍💻", role: "Data" },
+                { name: "Michael Zhang", role: "Lead" },
+                { name: "Emma Johnson", role: "Frontend" },
+                { name: "Raj Patel", role: "Data" },
             ],
             project: "Eco Dashboard",
             status: "Active",
@@ -43,10 +44,10 @@ const Teams: React.FC = () => {
             name: "Connect Squad",
             description: "Creating a social networking platform for student collaboration",
             members: [
-                { name: "Lisa Wang", avatar: "👩‍💻", role: "Lead" },
-                { name: "Tom Harris", avatar: "👨‍🎓", role: "Backend" },
-                { name: "Anna Lee", avatar: "👩‍🎨", role: "UX" },
-                { name: "Chris Baker", avatar: "👨‍💻", role: "Mobile" },
+                { name: "Lisa Wang", role: "Lead" },
+                { name: "Tom Harris", role: "Backend" },
+                { name: "Anna Lee", role: "UX" },
+                { name: "Chris Baker", role: "Mobile" },
             ],
             project: "Community Connect",
             status: "Forming",
@@ -55,12 +56,12 @@ const Teams: React.FC = () => {
             name: "Neural Network Lab",
             description: "Advanced machine learning framework for education and research",
             members: [
-                { name: "Dr. James Wilson", avatar: "👨‍🏫", role: "Advisor" },
-                { name: "Priya Sharma", avatar: "👩‍💻", role: "Lead" },
-                { name: "Kevin Liu", avatar: "👨‍💻", role: "Research" },
-                { name: "Sophia Garcia", avatar: "👩‍🔬", role: "Data Science" },
-                { name: "Marcus Brown", avatar: "👨‍💻", role: "Engineering" },
-                { name: "Yuki Tanaka", avatar: "👩‍💻", role: "Testing" },
+                { name: "Dr. James Wilson", role: "Advisor" },
+                { name: "Priya Sharma", role: "Lead" },
+                { name: "Kevin Liu", role: "Research" },
+                { name: "Sophia Garcia", role: "Data Science" },
+                { name: "Marcus Brown", role: "Engineering" },
+                { name: "Yuki Tanaka", role: "Testing" },
             ],
             project: "Neural Networks",
             status: "Active",
@@ -153,13 +154,12 @@ const Teams: React.FC = () => {
                                 <div className="flex items-center">
                                     <div className="flex -space-x-2">
                                         {team.members.slice(0, 4).map((member, mIdx) => (
-                                            <div
+                                            <AvatarIcon
                                                 key={mIdx}
-                                                className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-white dark:border-slate-900 flex items-center justify-center text-sm"
-                                                title={`${member.name} (${member.role})`}
-                                            >
-                                                {member.avatar}
-                                            </div>
+                                                name={member.name}
+                                                size="sm"
+                                                className="border-2 border-white dark:border-slate-900"
+                                            />
                                         ))}
                                         {team.members.length > 4 && (
                                             <div className="w-9 h-9 rounded-full bg-foreground/10 border-2 border-white dark:border-slate-900 flex items-center justify-center text-xs font-semibold text-foreground/60">
