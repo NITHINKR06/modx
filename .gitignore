@@ -41,3 +41,4 @@ netlify/
 .dockerignore
 
 firebase.rules
+firestore.rules
