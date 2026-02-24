@@ -47,33 +47,33 @@ const Dashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="space-y-6 md:space-y-8">
         <div className="reveal">
-          <h1 className="text-4xl font-black text-foreground mb-2">Dashboard</h1>
-          <p className="text-foreground/70">Welcome back! Here's your project overview.</p>
+          <h1 className="text-2xl md:text-4xl font-black text-foreground mb-1 md:mb-2">Dashboard</h1>
+          <p className="text-sm md:text-base text-foreground/70">Welcome back! Here's your project overview.</p>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {stats.map((s, i) => (
-            <TiltCard key={i} variant="gradient" className="p-6 reveal" style={{ animationDelay: `${i * 0.05}s` }}>
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center mb-4 glow-soft`}>
-                <s.icon size={24} className="text-white" />
+            <TiltCard key={i} variant="gradient" className="p-3 md:p-6 reveal" style={{ animationDelay: `${i * 0.05}s` }}>
+              <div className={`w-9 h-9 md:w-12 md:h-12 rounded-lg bg-gradient-to-br ${s.color} flex items-center justify-center mb-2 md:mb-4 glow-soft`}>
+                <s.icon size={20} className="text-white" />
               </div>
-              <p className="text-sm text-foreground/70 mb-1">{s.label}</p>
-              <h3 className="text-3xl font-bold text-foreground">{s.value}</h3>
-              <p className="text-xs text-accent mt-2">{s.sub}</p>
+              <p className="text-xs md:text-sm text-foreground/70 mb-0.5 md:mb-1">{s.label}</p>
+              <h3 className="text-xl md:text-3xl font-bold text-foreground">{s.value}</h3>
+              <p className="text-xs text-accent mt-1 md:mt-2 hidden sm:block">{s.sub}</p>
             </TiltCard>
           ))}
         </div>
 
         {/* Recent Projects */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="lg:col-span-2 reveal">
-            <TiltCard variant="glass" className="p-8">
+            <TiltCard variant="glass" className="p-4 md:p-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground">Recent Projects</h2>
-                <Link to="/dashboard/projects" className="text-primary font-semibold inline-flex items-center gap-0.5">View All →</Link>
+                <h2 className="text-lg md:text-2xl font-bold text-foreground">Recent Projects</h2>
+                <Link to="/dashboard/projects" className="text-primary font-semibold text-sm md:text-base inline-flex items-center gap-0.5">View All →</Link>
               </div>
               {recent.length === 0 ? (
                 <div className="text-center py-8">
@@ -104,9 +104,9 @@ const Dashboard: React.FC = () => {
 
           {/* Overview sidebar */}
           <div className="reveal">
-            <TiltCard variant="glass" className="p-8 h-full">
+            <TiltCard variant="glass" className="p-4 md:p-8 h-full">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground">Overview</h2>
+                <h2 className="text-lg md:text-2xl font-bold text-foreground">Overview</h2>
                 <Activity size={20} className="text-primary" />
               </div>
               <div className="space-y-4">
@@ -124,9 +124,9 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* CTA */}
-        <TiltCard variant="gradient" className="p-8 text-center reveal">
-          <h2 className="text-2xl font-bold text-foreground mb-4">Start a New Project</h2>
-          <p className="text-foreground/70 mb-6">Create and manage your next innovation</p>
+        <TiltCard variant="gradient" className="p-4 md:p-8 text-center reveal">
+          <h2 className="text-lg md:text-2xl font-bold text-foreground mb-2 md:mb-4">Start a New Project</h2>
+          <p className="text-sm md:text-base text-foreground/70 mb-4 md:mb-6">Create and manage your next innovation</p>
           <Link to="/dashboard/upload"><MagneticButton variant="primary" size="lg">New Project</MagneticButton></Link>
         </TiltCard>
       </div>

@@ -129,7 +129,7 @@ const About: React.FC = () => {
                 "Innovation, collaboration, integrity, and continuous learning",
             },
           ].map((item, idx) => (
-            <TiltCard key={idx} variant="glass" className="p-8 text-center reveal">
+            <TiltCard key={idx} variant="glass" className="p-6 md:p-8 text-center reveal">
               <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center mx-auto mb-4 glow-soft">
                 <item.icon size={32} className="text-white" />
               </div>
@@ -261,7 +261,7 @@ const About: React.FC = () => {
 
       {/* Impact Stats */}
       <Section className="py-16">
-        <TiltCard variant="gradient" className="p-12">
+        <TiltCard variant="gradient" className="p-6 md:p-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               { label: "Active Members", value: "150+" },

@@ -62,7 +62,7 @@ const SettingsPage: React.FC = () => {
         <DashboardLayout>
             <div className="max-w-4xl mx-auto space-y-8">
                 <div className="reveal">
-                    <h1 className="text-4xl font-black text-foreground mb-2">Settings</h1>
+                    <h1 className="text-2xl md:text-4xl font-black text-foreground mb-2">Settings</h1>
                     <p className="text-foreground/70">Manage your account and preferences</p>
                 </div>
 
@@ -77,8 +77,8 @@ const SettingsPage: React.FC = () => {
 
                 {activeTab === "profile" && (
                     <div className="space-y-6 reveal">
-                        <TiltCard variant="glass" className="p-8">
-                            <div className="flex items-center gap-6">
+                        <TiltCard variant="glass" className="p-4 md:p-8">
+                            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                                 <div className="relative">
                                     <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center text-white font-black text-3xl">
                                         {profile.name.charAt(0).toUpperCase() || "U"}
@@ -93,7 +93,7 @@ const SettingsPage: React.FC = () => {
                                 </div>
                             </div>
                         </TiltCard>
-                        <TiltCard variant="glass" className="p-8">
+                        <TiltCard variant="glass" className="p-4 md:p-8">
                             <h3 className="text-lg font-bold text-foreground mb-6">Personal Information</h3>
                             <div className="space-y-5">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -124,7 +124,7 @@ const SettingsPage: React.FC = () => {
                 )}
 
                 {activeTab === "notifications" && (
-                    <TiltCard variant="glass" className="p-8 reveal">
+                    <TiltCard variant="glass" className="p-4 md:p-8 reveal">
                         <h3 className="text-lg font-bold text-foreground mb-6">Notification Preferences</h3>
                         <div className="space-y-5">
                             {([{ key: "email" as const, label: "Email Notifications", desc: "Receive important updates via email" }, { key: "projects" as const, label: "Project Updates", desc: "Get notified about project milestones" }, { key: "teams" as const, label: "Team Activity", desc: "Notifications when team members make changes" }, { key: "newsletter" as const, label: "MODX Newsletter", desc: "Weekly digest of community news" }]).map((item) => (
@@ -141,7 +141,7 @@ const SettingsPage: React.FC = () => {
 
                 {activeTab === "security" && (
                     <div className="space-y-6 reveal">
-                        <TiltCard variant="glass" className="p-8">
+                        <TiltCard variant="glass" className="p-4 md:p-8">
                             <h3 className="text-lg font-bold text-foreground mb-6">Change Password</h3>
                             <div className="space-y-5 max-w-md">
                                 <div><label className="block text-sm font-semibold text-foreground/80 mb-2">New Password</label><input type="password" value={passwords.newPwd} onChange={(e) => setPasswords({ ...passwords, newPwd: e.target.value })} placeholder="••••••••" className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-foreground placeholder-foreground/30 transition-all duration-300" /></div>
@@ -149,7 +149,7 @@ const SettingsPage: React.FC = () => {
                                 <button onClick={handlePasswordChange} className="px-6 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-primary to-blue-600 hover:shadow-lg transition-all duration-300">Update Password</button>
                             </div>
                         </TiltCard>
-                        <TiltCard variant="glass" className="p-8">
+                        <TiltCard variant="glass" className="p-4 md:p-8">
                             <h3 className="text-lg font-bold text-foreground mb-2">Two-Factor Authentication</h3>
                             <p className="text-sm text-foreground/60 mb-4">Add an extra layer of security to your account</p>
                             <MagneticButton variant="outline" size="md"><Shield size={16} /> Enable 2FA</MagneticButton>
@@ -158,7 +158,7 @@ const SettingsPage: React.FC = () => {
                 )}
 
                 {activeTab === "appearance" && (
-                    <TiltCard variant="glass" className="p-8 reveal">
+                    <TiltCard variant="glass" className="p-4 md:p-8 reveal">
                         <h3 className="text-lg font-bold text-foreground mb-6">Theme & Display</h3>
                         <p className="text-sm text-foreground/60 mb-4">Use the theme toggle in the navigation bar to switch between light and dark modes.</p>
                         <div className="grid grid-cols-2 gap-4 max-w-sm">

@@ -198,7 +198,7 @@ const UploadProject: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Section 1: Basic Info */}
-                    <TiltCard variant="glass" className="p-8">
+                    <TiltCard variant="glass" className="p-4 md:p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
                                 <FileText size={20} className="text-white" />
@@ -261,7 +261,7 @@ const UploadProject: React.FC = () => {
                     </TiltCard>
 
                     {/* Section 2: Team Members */}
-                    <TiltCard variant="glass" className="p-8">
+                    <TiltCard variant="glass" className="p-4 md:p-8">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
@@ -318,7 +318,7 @@ const UploadProject: React.FC = () => {
                     </TiltCard>
 
                     {/* Section 3: Technologies */}
-                    <TiltCard variant="glass" className="p-8">
+                    <TiltCard variant="glass" className="p-4 md:p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                                 <Tag size={20} className="text-white" />
@@ -368,7 +368,7 @@ const UploadProject: React.FC = () => {
                     </TiltCard>
 
                     {/* Section 4: Images */}
-                    <TiltCard variant="glass" className="p-8">
+                    <TiltCard variant="glass" className="p-4 md:p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center">
                                 <ImageIcon size={20} className="text-white" />
@@ -425,7 +425,7 @@ const UploadProject: React.FC = () => {
                     </TiltCard>
 
                     {/* Section 5: Links */}
-                    <TiltCard variant="glass" className="p-8">
+                    <TiltCard variant="glass" className="p-4 md:p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
                                 <Globe size={20} className="text-white" />
@@ -476,7 +476,7 @@ const UploadProject: React.FC = () => {
                     </TiltCard>
 
                     {/* Submit */}
-                    <div className="flex justify-end gap-4">
+                    <div className="flex flex-col sm:flex-row justify-end gap-3 md:gap-4">
                         <MagneticButton variant="outline" size="lg" type="button">
                             Save as Draft
                         </MagneticButton>

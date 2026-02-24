@@ -49,7 +49,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Animated Title */}
         <div className={`mb-8 transition-all duration-1000 ${animationPhase ? "opacity-100" : "opacity-0 translate-y-10"
           }`}>
-          <h1 className="text-6xl md:text-8xl font-black text-foreground mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-foreground mb-6 leading-tight">
             <span className="bg-gradient-to-r from-primary via-blue-600 to-accent bg-clip-text text-transparent animate-blur-in">
               {title}
             </span>

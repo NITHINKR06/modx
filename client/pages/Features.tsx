@@ -69,7 +69,7 @@ const Features: React.FC = () => {
             <TiltCard
               key={idx}
               variant="glass"
-              className="p-10 flex flex-col reveal cursor-pointer group"
+              className="p-6 md:p-10 flex flex-col reveal cursor-pointer group"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
               <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mb-6 glow-soft group-hover:scale-110 transition-transform duration-300">
@@ -98,7 +98,7 @@ const Features: React.FC = () => {
 
       {/* CTA */}
       <Section className="py-16">
-        <TiltCard variant="gradient" className="p-12 text-center">
+        <TiltCard variant="gradient" className="p-6 md:p-12 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Start Building?
           </h2>

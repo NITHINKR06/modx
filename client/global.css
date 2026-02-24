@@ -1,13 +1,13 @@
 /** @import must precede all other statements */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap");
-
 @layer base {
+
   /**
    * Tailwind CSS theme
    * tailwind.config.ts expects the following color variables to be expressed as HSL values.
@@ -240,24 +240,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 h1 {
-  font-size: 3.5rem;
+  font-size: 2rem;
   font-weight: 800;
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 800;
 }
 
 h3 {
-  font-size: 1.875rem;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
@@ -293,14 +298,12 @@ html {
 
 /* Mesh gradient animation */
 .mesh-gradient {
-  background: linear-gradient(
-    135deg,
-    rgba(62, 87, 223, 0.8) 0%,
-    rgba(0, 204, 255, 0.6) 25%,
-    rgba(168, 100, 255, 0.5) 50%,
-    rgba(62, 87, 223, 0.7) 75%,
-    rgba(0, 204, 255, 0.6) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(62, 87, 223, 0.8) 0%,
+      rgba(0, 204, 255, 0.6) 25%,
+      rgba(168, 100, 255, 0.5) 50%,
+      rgba(62, 87, 223, 0.7) 75%,
+      rgba(0, 204, 255, 0.6) 100%);
   background-size: 400% 400%;
   animation: mesh-shift 15s ease infinite;
 }
@@ -308,8 +311,7 @@ html {
 /* Tech grid overlay */
 .tech-grid {
   background-image:
-    linear-gradient(
-      0deg,
+    linear-gradient(0deg,
       transparent 24%,
       rgba(62, 87, 223, 0.05) 25%,
       rgba(62, 87, 223, 0.05) 26%,
@@ -318,10 +320,8 @@ html {
       rgba(62, 87, 223, 0.05) 75%,
       rgba(62, 87, 223, 0.05) 76%,
       transparent 77%,
-      transparent
-    ),
-    linear-gradient(
-      90deg,
+      transparent),
+    linear-gradient(90deg,
       transparent 24%,
       rgba(62, 87, 223, 0.05) 25%,
       rgba(62, 87, 223, 0.05) 26%,
@@ -330,8 +330,7 @@ html {
       rgba(62, 87, 223, 0.05) 75%,
       rgba(62, 87, 223, 0.05) 76%,
       transparent 77%,
-      transparent
-    );
+      transparent);
   background-size: 50px 50px;
 }
 
@@ -395,9 +394,12 @@ html {
 }
 
 @keyframes float-parallax {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-30px);
   }
@@ -424,12 +426,10 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    90deg,
-    hsl(248 60% 35%),
-    hsl(190 100% 55%),
-    hsl(248 60% 35%)
-  );
+  background: linear-gradient(90deg,
+      hsl(248 60% 35%),
+      hsl(190 100% 55%),
+      hsl(248 60% 35%));
   border-radius: inherit;
   padding: 2px;
   z-index: -1;
@@ -452,12 +452,10 @@ html {
 
 /* Shimmer loading effect */
 .shimmer-loading {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }

@@ -86,7 +86,7 @@ const Teams: React.FC = () => {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 reveal">
                     <div>
-                        <h1 className="text-4xl font-black text-foreground mb-2">Teams</h1>
+                        <h1 className="text-2xl md:text-4xl font-black text-foreground mb-2">Teams</h1>
                         <p className="text-foreground/70">
                             Manage and discover teams in the MODX community
                         </p>
@@ -117,7 +117,7 @@ const Teams: React.FC = () => {
                         <TiltCard
                             key={idx}
                             variant="glass"
-                            className="p-8 reveal cursor-pointer group"
+                            className="p-4 md:p-8 reveal cursor-pointer group"
                             style={{ animationDelay: `${idx * 0.05}s` }}
                         >
                             <div className="flex items-start justify-between mb-4">
