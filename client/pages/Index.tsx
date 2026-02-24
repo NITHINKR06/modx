@@ -126,10 +126,10 @@ const Index: React.FC = () => {
 
       {/* Cinematic Hero Section */}
       <HeroSection
-        title="MODX"
+        title="MODX – Where Students Build the Future"
         subtitle="Where Ideas Become Reality. Join the most innovative student community pushing the boundaries of technology and creativity."
         primaryCTA={{ text: "Explore Projects", icon: <Rocket size={20} />, onClick: () => navigate("/features") }}
-        secondaryCTA={{ text: "Join Community", icon: <Users size={20} />, onClick: () => navigate("/register") }}
+        secondaryCTA={{ text: "Login", icon: <Users size={20} />, onClick: () => navigate("/login") }}
       />
 
       {/* Features Grid */}

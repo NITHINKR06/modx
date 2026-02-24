@@ -7,7 +7,10 @@ import Index from "./pages/Index";
 import Features from "./pages/Features";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
-import { Projects, Settings } from "./pages/Placeholder";
+import MyProjects from "./pages/MyProjects";
+import SettingsPage from "./pages/SettingsPage";
+import UploadProject from "./pages/UploadProject";
+import Teams from "./pages/Teams";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -26,8 +29,10 @@ export const App = () => (
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/projects" element={<Projects />} />
-          <Route path="/dashboard/settings" element={<Settings />} />
+          <Route path="/dashboard/projects" element={<MyProjects />} />
+          <Route path="/dashboard/upload" element={<UploadProject />} />
+          <Route path="/dashboard/teams" element={<Teams />} />
+          <Route path="/dashboard/settings" element={<SettingsPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

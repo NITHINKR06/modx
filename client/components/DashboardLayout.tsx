@@ -10,6 +10,8 @@ import {
   Bell,
   User,
   ChevronDown,
+  Upload,
+  UsersRound,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -27,7 +29,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const menuItems = [
     { icon: Home, label: "Overview", path: "/dashboard" },
-    { icon: Rocket, label: "Projects", path: "/dashboard/projects" },
+    { icon: Rocket, label: "My Projects", path: "/dashboard/projects" },
+    { icon: Upload, label: "Upload Project", path: "/dashboard/upload" },
+    { icon: UsersRound, label: "Teams", path: "/dashboard/teams" },
     { icon: Settings, label: "Settings", path: "/dashboard/settings" },
   ];
 
@@ -35,9 +39,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     <div className="flex h-screen bg-gradient-to-br from-white via-blue-50/50 to-white overflow-hidden">
       {/* Sidebar */}
       <div
-        className={`fixed md:relative z-40 h-screen transition-all duration-300 ${
-          sidebarOpen ? "w-64" : "w-20"
-        } bg-white border-r border-border/50 flex flex-col`}
+        className={`fixed md:relative z-40 h-screen transition-all duration-300 ${sidebarOpen ? "w-64" : "w-20"
+          } bg-white border-r border-border/50 flex flex-col`}
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-6 border-b border-border/50">
@@ -63,11 +66,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
-                isActive(item.path)
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${isActive(item.path)
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+                }`}
             >
               <item.icon size={20} />
               {sidebarOpen && <span className="font-medium">{item.label}</span>}
@@ -117,9 +119,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 </div>
                 <ChevronDown
                   size={16}
-                  className={`transition-transform ${
-                    profileMenuOpen ? "rotate-180" : ""
-                  }`}
+                  className={`transition-transform ${profileMenuOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 

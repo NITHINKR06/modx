@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Section } from "@/components/Section";
-import { Heart, Target, Eye } from "lucide-react";
+import { Heart, Target, Eye, GraduationCap, ArrowRight, Rocket } from "lucide-react";
 
 const About: React.FC = () => {
   const teamMembers = [
@@ -80,6 +81,19 @@ const About: React.FC = () => {
     },
   ];
 
+  const howItWorks = [
+    { step: 1, title: "Form Team", desc: "Find like-minded students and build your dream team" },
+    { step: 2, title: "Build", desc: "Collaborate, code, design and bring your idea to life" },
+    { step: 3, title: "Present", desc: "Showcase your project to peers, mentors, and industry" },
+    { step: 4, title: "Publish", desc: "Launch your project and add it to your portfolio" },
+  ];
+
+  const facultyMembers = [
+    { name: "Dr. Robert Williams", role: "Faculty Advisor", avatar: "👨‍🏫", department: "Computer Science" },
+    { name: "Prof. Anita Patel", role: "Coordinator", avatar: "👩‍🏫", department: "Innovation & Design" },
+    { name: "Dr. Mark Thompson", role: "Mentor", avatar: "👨‍🔬", department: "AI & Machine Learning" },
+  ];
+
   return (
     <div className="w-full min-h-screen bg-background dark:bg-slate-950">
       <Navigation />
@@ -129,6 +143,32 @@ const About: React.FC = () => {
               </h3>
               <p className="text-foreground/70">{item.description}</p>
             </TiltCard>
+          ))}
+        </div>
+      </Section>
+
+      {/* How It Works */}
+      <Section className="py-12">
+        <div className="mb-12 text-center reveal">
+          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">How It Works</h2>
+          <p className="text-xl text-foreground/70">From idea to published project in four steps</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {howItWorks.map((item, idx) => (
+            <div key={idx} className="relative reveal" style={{ animationDelay: `${idx * 0.1}s` }}>
+              <TiltCard variant="gradient" className="p-8 text-center cursor-pointer group">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 text-white font-black text-xl group-hover:scale-110 transition-transform duration-300">
+                  {item.step}
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-foreground/70">{item.desc}</p>
+              </TiltCard>
+              {idx < 3 && (
+                <div className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 text-foreground/20">
+                  <ArrowRight size={20} />
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </Section>
@@ -243,6 +283,24 @@ const About: React.FC = () => {
             ))}
           </div>
         </TiltCard>
+      </Section>
+
+      {/* Faculty / Coordinators */}
+      <Section>
+        <div className="mb-12 text-center reveal">
+          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">Faculty & Coordinators</h2>
+          <p className="text-xl text-foreground/70">Guiding and mentoring the next generation</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {facultyMembers.map((member, idx) => (
+            <TiltCard key={idx} variant="glass" className="p-8 text-center reveal cursor-pointer group" style={{ animationDelay: `${idx * 0.1}s` }}>
+              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">{member.avatar}</div>
+              <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
+              <p className="text-sm font-semibold text-accent mb-1">{member.role}</p>
+              <p className="text-xs text-foreground/50">{member.department}</p>
+            </TiltCard>
+          ))}
+        </div>
       </Section>
 
       {/* Join Section */}
