@@ -9,7 +9,6 @@ import {
     deleteDoc,
     query,
     where,
-    orderBy,
     serverTimestamp,
     Timestamp,
 } from "firebase/firestore";
@@ -67,19 +66,26 @@ export async function createProject(
 }
 
 export async function getUserProjects(uid: string): Promise<ProjectData[]> {
-    const q = query(
-        projectsCol(),
-        where("ownerId", "==", uid),
-        orderBy("createdAt", "desc")
-    );
+    const q = query(projectsCol(), where("ownerId", "==", uid));
     const snap = await getDocs(q);
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as ProjectData));
+    return snap.docs
+        .map((d) => ({ id: d.id, ...d.data() } as ProjectData))
+        .sort((a, b) => {
+            const aTime = a.createdAt?.toMillis() ?? 0;
+            const bTime = b.createdAt?.toMillis() ?? 0;
+            return bTime - aTime; // newest first
+        });
 }
 
 export async function getAllProjects(): Promise<ProjectData[]> {
-    const q = query(projectsCol(), orderBy("createdAt", "desc"));
-    const snap = await getDocs(q);
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as ProjectData));
+    const snap = await getDocs(projectsCol());
+    return snap.docs
+        .map((d) => ({ id: d.id, ...d.data() } as ProjectData))
+        .sort((a, b) => {
+            const aTime = a.createdAt?.toMillis() ?? 0;
+            const bTime = b.createdAt?.toMillis() ?? 0;
+            return bTime - aTime; // newest first
+        });
 }
 
 export async function updateProject(

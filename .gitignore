@@ -39,3 +39,5 @@ AGENTS.md
 netlify.toml
 netlify/
 .dockerignore
+
+firebase.rules

@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Projects ──────────────────────────────────────────────────────
+    // Any authenticated user can read all projects (public explore page).
+    // Only the document owner can create / update / delete their projects.
+    match /projects/{projectId} {
+      allow read: if request.auth != null;
+
+      allow create: if request.auth != null
+                    && request.resource.data.ownerId == request.auth.uid;
+
+      allow update, delete: if request.auth != null
+                            && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ── User Profiles ─────────────────────────────────────────────────
+    // Each user can only read and write their own profile document.
+    match /users/{userId} {
+      allow read, write: if request.auth != null
+                         && request.auth.uid == userId;
+    }
+  }
+}
