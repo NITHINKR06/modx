@@ -23,7 +23,18 @@ dist-ssr
 *.sln
 *.sw?
 
+# Build / tooling caches
 .config/
 .builder/
+
+# Environment secrets
 .env
 .env.*
+
+# AI / editor tool files
+AGENTS.md
+
+# Platform-specific deploy configs not in use
+netlify.toml
+netlify/
+.dockerignore
