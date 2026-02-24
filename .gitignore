@@ -24,4 +24,6 @@ dist-ssr
 *.sw?
 
 .config/
-!.env
+.builder/
+.env
+.env.*
