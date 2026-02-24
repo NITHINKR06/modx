@@ -1,0 +1,485 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap");
+
+@layer base {
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    --background: 250 15% 97%;
+    --foreground: 250 20% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 250 20% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 250 20% 12%;
+
+    --primary: 248 60% 35%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 85% 55%;
+    --secondary-foreground: 250 20% 12%;
+
+    --muted: 250 10% 85%;
+    --muted-foreground: 250 10% 45%;
+
+    --accent: 190 100% 55%;
+    --accent-foreground: 250 20% 12%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 250 10% 90%;
+    --input: 250 10% 95%;
+    --ring: 248 60% 35%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 250 15% 97%;
+
+    --sidebar-foreground: 250 20% 12%;
+
+    --sidebar-primary: 248 60% 35%;
+
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 190 100% 55%;
+
+    --sidebar-accent-foreground: 250 20% 12%;
+
+    --sidebar-border: 250 10% 90%;
+
+    --sidebar-ring: 190 100% 55%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+}
+
+/* Glass Morphism Effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(30, 20, 60, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient Backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, hsl(248 60% 35%) 0%, hsl(210 85% 55%) 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, hsl(190 100% 55%) 0%, hsl(248 60% 35%) 100%);
+}
+
+.gradient-soft {
+  background: linear-gradient(135deg, hsl(250 15% 97%) 0%, hsl(250 15% 93%) 100%);
+}
+
+/* Glow Effects */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(62, 87, 223, 0.3);
+}
+
+.glow-accent {
+  box-shadow: 0 0 20px rgba(0, 204, 255, 0.4);
+}
+
+/* 3D Card Effects */
+.card-3d {
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+  transform: translateY(-8px) perspective(1000px) rotateX(5deg);
+  box-shadow: 0 20px 40px rgba(62, 87, 223, 0.2);
+}
+
+/* Hover Tilt */
+.hover-tilt {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.hover-tilt:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.02);
+}
+
+/* Gradient Border */
+.gradient-border {
+  position: relative;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1px;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, hsl(248 60% 35%) 0%, hsl(190 100% 55%) 100%);
+  border-radius: 0.75rem;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* Floating Elements */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-delayed {
+  animation: float 4s ease-in-out infinite 0.5s;
+}
+
+.floating-slow {
+  animation: float 5s ease-in-out infinite 1s;
+}
+
+/* Smooth Reveals */
+.reveal {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+.reveal-delay-1 {
+  animation: fade-in-up 0.6s ease-out 0.1s both;
+}
+
+.reveal-delay-2 {
+  animation: fade-in-up 0.6s ease-out 0.2s both;
+}
+
+.reveal-delay-3 {
+  animation: fade-in-up 0.6s ease-out 0.3s both;
+}
+
+.reveal-delay-4 {
+  animation: fade-in-up 0.6s ease-out 0.4s both;
+}
+
+/* Premium Typography */
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+h3 {
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection Color */
+::selection {
+  background-color: hsl(248 60% 35%);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(250 15% 97%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(248 60% 35%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(248 60% 30%);
+}
+
+/* CINEMATIC EFFECTS */
+
+/* Mesh gradient animation */
+.mesh-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(62, 87, 223, 0.8) 0%,
+    rgba(0, 204, 255, 0.6) 25%,
+    rgba(168, 100, 255, 0.5) 50%,
+    rgba(62, 87, 223, 0.7) 75%,
+    rgba(0, 204, 255, 0.6) 100%
+  );
+  background-size: 400% 400%;
+  animation: mesh-shift 15s ease infinite;
+}
+
+/* Tech grid overlay */
+.tech-grid {
+  background-image:
+    linear-gradient(
+      0deg,
+      transparent 24%,
+      rgba(62, 87, 223, 0.05) 25%,
+      rgba(62, 87, 223, 0.05) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(62, 87, 223, 0.05) 75%,
+      rgba(62, 87, 223, 0.05) 76%,
+      transparent 77%,
+      transparent
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24%,
+      rgba(62, 87, 223, 0.05) 25%,
+      rgba(62, 87, 223, 0.05) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(62, 87, 223, 0.05) 75%,
+      rgba(62, 87, 223, 0.05) 76%,
+      transparent 77%,
+      transparent
+    );
+  background-size: 50px 50px;
+}
+
+/* Advanced glass effect */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-premium {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Soft glow effect */
+.glow-soft {
+  box-shadow:
+    0 0 20px rgba(62, 87, 223, 0.15),
+    0 0 40px rgba(62, 87, 223, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dark .glow-soft {
+  box-shadow:
+    0 0 20px rgba(0, 204, 255, 0.2),
+    0 0 40px rgba(62, 87, 223, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Magnetic button base */
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.magnetic-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.magnetic-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Floating animation with parallax */
+.float-parallax {
+  animation: float-parallax 6s ease-in-out infinite;
+}
+
+@keyframes float-parallax {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+/* Premium card hover */
+.card-premium:hover {
+  transform: translateY(-10px) perspective(1000px) rotateX(8deg);
+  box-shadow:
+    0 20px 40px rgba(62, 87, 223, 0.2),
+    0 0 40px rgba(0, 204, 255, 0.1);
+}
+
+/* Animated gradient border */
+.gradient-border-animated {
+  position: relative;
+  background: white;
+}
+
+.gradient-border-animated::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    hsl(248 60% 35%),
+    hsl(190 100% 55%),
+    hsl(248 60% 35%)
+  );
+  border-radius: inherit;
+  padding: 2px;
+  z-index: -1;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.dark .gradient-border-animated {
+  background: hsl(250 15% 5%);
+}
+
+/* Smooth page transitions */
+.page-transition-enter {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+.page-transition-exit {
+  animation: fade-in-up 0.6s ease-out reverse;
+}
+
+/* Shimmer loading effect */
+.shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* DARK MODE */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  @apply bg-slate-950 text-white;
+}
+
+/* Floating geometric shapes */
+.shape-float-1 {
+  animation: float-parallax 8s ease-in-out infinite;
+}
+
+.shape-float-2 {
+  animation: float-parallax 10s ease-in-out infinite 1s;
+}
+
+.shape-float-3 {
+  animation: float-parallax 12s ease-in-out infinite 2s;
+}
