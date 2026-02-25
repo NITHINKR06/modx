@@ -9,7 +9,11 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     updateProfile,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
 } from "firebase/auth";
+
 import { auth } from "@/lib/firebase";
 import { createUserProfile, getUserProfile, isAdminUser, logActivity } from "@/lib/firestore";
 
@@ -22,7 +26,8 @@ interface AuthContextType {
     loading: boolean;
     isAdmin: boolean;
     adminLoading: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
+    signIn: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
+
     signUp: (email: string, password: string, name: string) => Promise<void>;
     signInWithGoogle: () => Promise<void>;
     signOutUser: () => Promise<void>;
@@ -62,18 +67,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []);
 
     /* -- sign in ---------------------------------------------------- */
-    const signIn = async (email: string, password: string) => {
+    const signIn = async (email: string, password: string, rememberMe = true) => {
+        // Set persistence: LOCAL = survives browser restart, SESSION = tab only
+        await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
     };
 
+
     /* -- sign up ---------------------------------------------------- */
     const signUp = async (email: string, password: string, name: string) => {
+        if (!name.trim()) {
+            throw Object.assign(new Error("Name cannot be empty."), { code: "auth/invalid-display-name" });
+        }
+        if (password.length < 8) {
+            throw Object.assign(
+                new Error("Password must be at least 8 characters."),
+                { code: "auth/weak-password" }
+            );
+        }
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(cred.user, { displayName: name });
+        await updateProfile(cred.user, { displayName: name.trim() });
         // Create Firestore profile
         await createUserProfile({
             uid: cred.user.uid,
-            name,
+            name: name.trim(),
             email,
             bio: "",
             role: "Member",
@@ -82,11 +99,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logActivity({
             type: "user_registered",
             userId: cred.user.uid,
-            userName: name,
+            userName: name.trim(),
             details: `registered a new account`,
             metadata: { email },
         }).catch(() => { });
     };
+
 
     /* -- google ----------------------------------------------------- */
     const signInWithGoogle = async () => {

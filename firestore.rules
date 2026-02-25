@@ -8,6 +8,22 @@ service cloud.firestore {
              && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
+    // ── Helper: allowed project fields ───────────────────────────────
+    function validProjectFields() {
+      return request.resource.data.keys().hasOnly([
+        'title', 'shortDesc', 'detailedDesc', 'teamMembers', 'technologies',
+        'images', 'githubLink', 'demoLink', 'ownerId', 'ownerName',
+        'status', 'progress', 'createdAt'
+      ]);
+    }
+
+    // ── Helper: allowed user profile fields ──────────────────────────
+    function validUserFields() {
+      return request.resource.data.keys().hasOnly([
+        'uid', 'name', 'email', 'bio', 'role', 'createdAt'
+      ]);
+    }
+
     // ── Admins collection ────────────────────────────────────────────
     // Authenticated users can read their own doc (to detect admin status).
     // No client-side writes – manage this collection only from Firebase Console.
@@ -19,10 +35,12 @@ service cloud.firestore {
     // ── Activity Log ──────────────────────────────────────────────────
     // Any authenticated user can create logs for themselves.
     // Only admins can read the activity log. No updates/deletes from client.
+    // list is disabled — admins must use server-side SDK or query with limit.
     match /activities/{activityId} {
       allow create: if request.auth != null
                     && request.resource.data.userId == request.auth.uid;
-      allow read: if isAdmin();
+      allow get: if isAdmin();
+      allow list: if isAdmin();
       allow update, delete: if false;
     }
 
@@ -34,21 +52,36 @@ service cloud.firestore {
       allow read: if request.auth != null;
 
       allow create: if request.auth != null
-                    && request.resource.data.ownerId == request.auth.uid;
+                    && request.resource.data.ownerId == request.auth.uid
+                    && validProjectFields();
 
-      allow update, delete: if request.auth != null
-                            && (resource.data.ownerId == request.auth.uid
-                                || isAdmin());
+      allow update: if request.auth != null
+                    && (resource.data.ownerId == request.auth.uid || isAdmin())
+                    && validProjectFields();
+
+      allow delete: if request.auth != null
+                    && (resource.data.ownerId == request.auth.uid || isAdmin());
     }
 
     // ── User Profiles ─────────────────────────────────────────────────
     // Each user can only read and write their own profile document.
     // Admins can read and write ANY user profile.
+    // Non-admins are blocked from changing their own 'role' field.
     match /users/{userId} {
       allow read: if request.auth != null
                   && (request.auth.uid == userId || isAdmin());
+
       allow write: if request.auth != null
-                   && (request.auth.uid == userId || isAdmin());
+                   && (request.auth.uid == userId || isAdmin())
+                   && validUserFields()
+                   // Non-admins cannot escalate their own role
+                   && (isAdmin()
+                       || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+
+      // Allow initial profile creation (no existing resource to diff against)
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && validUserFields();
     }
   }
 }

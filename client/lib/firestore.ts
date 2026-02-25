@@ -117,34 +117,42 @@ export async function getAllProjects(): Promise<ProjectData[]> {
 
 export async function updateProject(
     id: string,
-    data: Partial<ProjectData>
+    data: Partial<ProjectData>,
+    actorUid?: string,
+    actorName?: string
 ): Promise<void> {
     await updateDoc(doc(db, "projects", id), data);
-    // Non-blocking activity log
-    if (data.ownerId || data.ownerName) return; // skip internal-only updates
-    const ownerName = data.ownerName ?? "Admin";
+    // Build a human-readable summary of what changed
     const parts: string[] = [];
     if (data.status) parts.push(`status → ${data.status}`);
     if (data.progress !== undefined) parts.push(`progress → ${data.progress}%`);
-    logActivity({
-        type: "project_updated",
-        userId: data.ownerId ?? "admin",
-        userName: ownerName,
-        details: `updated project${parts.length ? " (" + parts.join(", ") + ")" : ""}`,
-        metadata: { projectId: id, ...data },
-    }).catch(() => { });
+    if (data.title) parts.push(`title → "${data.title}"`);
+    // Only log if at least one meaningful field changed
+    if (parts.length > 0 || data.title || data.detailedDesc || data.shortDesc) {
+        logActivity({
+            type: "project_updated",
+            userId: actorUid ?? data.ownerId ?? "system",
+            userName: actorName ?? data.ownerName ?? "System",
+            details: `updated project${parts.length ? " (" + parts.join(", ") + ")" : ""}`,
+            metadata: { projectId: id },
+        }).catch(() => { });
+    }
 }
 
-export async function deleteProject(id: string, meta?: { ownerName?: string; title?: string }): Promise<void> {
+export async function deleteProject(
+    id: string,
+    meta?: { ownerUid?: string; ownerName?: string; title?: string }
+): Promise<void> {
     await deleteDoc(doc(db, "projects", id));
     logActivity({
         type: "project_deleted",
-        userId: "admin",
-        userName: meta?.ownerName ?? "Admin",
+        userId: meta?.ownerUid ?? "system",
+        userName: meta?.ownerName ?? "System",
         details: `deleted project${meta?.title ? ` "${meta.title}"` : ""}`,
         metadata: { projectId: id, title: meta?.title },
     }).catch(() => { });
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  User Profiles                                                      */

@@ -319,8 +319,13 @@ const AdminProjects: React.FC = () => {
     const pageData = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     const handleDelete = async (id: string) => {
+        const projectToDelete = projects.find((p) => p.id === id);
         try {
-            await deleteProject(id);
+            await deleteProject(id, {
+                ownerUid: projectToDelete?.ownerId,
+                ownerName: projectToDelete?.ownerName,
+                title: projectToDelete?.title,
+            });
             setProjects((prev) => prev.filter((p) => p.id !== id));
             if (viewProject?.id === id) setViewProject(null);
             toast.success("Project deleted");
@@ -331,6 +336,7 @@ const AdminProjects: React.FC = () => {
         }
     };
 
+
     const startEdit = (p: ProjectData) => {
         setEditingId(p.id!);
         setEditStatus(p.status);
@@ -339,8 +345,14 @@ const AdminProjects: React.FC = () => {
 
     const saveEdit = async () => {
         if (!editingId) return;
+        const projectBeingEdited = projects.find((p) => p.id === editingId);
         try {
-            await updateProject(editingId, { status: editStatus, progress: editProgress });
+            await updateProject(
+                editingId,
+                { status: editStatus, progress: editProgress },
+                "admin",  // actor UID — use actual admin UID if available from auth context
+                "Admin"
+            );
             setProjects((prev) =>
                 prev.map((p) =>
                     p.id === editingId ? { ...p, status: editStatus, progress: editProgress } : p
@@ -353,6 +365,7 @@ const AdminProjects: React.FC = () => {
             setEditingId(null);
         }
     };
+
 
     if (loading) {
         return (

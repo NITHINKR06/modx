@@ -78,8 +78,13 @@ const AdminUserDetail: React.FC = () => {
     };
 
     const handleDeleteProject = async (projectId: string) => {
+        const projectToDelete = projects.find((p) => p.id === projectId);
         try {
-            await deleteProject(projectId);
+            await deleteProject(projectId, {
+                ownerUid: projectToDelete?.ownerId,
+                ownerName: projectToDelete?.ownerName,
+                title: projectToDelete?.title,
+            });
             setProjects((prev) => prev.filter((p) => p.id !== projectId));
             toast.success("Project deleted");
         } catch (err: any) {
@@ -88,6 +93,7 @@ const AdminUserDetail: React.FC = () => {
             setDeleteProjectId(null);
         }
     };
+
 
     if (loading) {
         return (
@@ -287,12 +293,12 @@ const AdminUserDetail: React.FC = () => {
                                         <td className="px-4 py-[10px] border-b border-[#eee]">
                                             <span
                                                 className={`text-[11px] px-2 py-0.5 rounded font-medium ${p.status === "In Progress"
-                                                        ? "bg-blue-50 text-blue-700"
-                                                        : p.status === "Completed"
-                                                            ? "bg-green-50 text-green-700"
-                                                            : p.status === "On Hold"
-                                                                ? "bg-orange-50 text-orange-700"
-                                                                : "bg-gray-100 text-gray-600"
+                                                    ? "bg-blue-50 text-blue-700"
+                                                    : p.status === "Completed"
+                                                        ? "bg-green-50 text-green-700"
+                                                        : p.status === "On Hold"
+                                                            ? "bg-orange-50 text-orange-700"
+                                                            : "bg-gray-100 text-gray-600"
                                                     }`}
                                             >
                                                 {p.status}

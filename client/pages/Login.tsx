@@ -32,7 +32,8 @@ const Login: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await signIn(email, password);
+      await signIn(email, password, rememberMe);
+
       // Auth state change will trigger the useEffect above for redirect
     } catch (err: any) {
       const msg =

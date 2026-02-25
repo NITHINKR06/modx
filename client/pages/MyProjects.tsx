@@ -810,8 +810,13 @@ const MyProjects: React.FC = () => {
     });
 
     const handleDelete = async (id: string) => {
+        const projectToDelete = projects.find((p) => p.id === id);
         try {
-            await deleteProject(id);
+            await deleteProject(id, {
+                ownerUid: user?.uid,
+                ownerName: projectToDelete?.ownerName,
+                title: projectToDelete?.title,
+            });
             setProjects((prev) => prev.filter((p) => p.id !== id));
             setSelectedProject(null);
             toast.success("Project deleted");
@@ -819,6 +824,7 @@ const MyProjects: React.FC = () => {
             toast.error("Failed to delete project");
         }
     };
+
 
     const counts = {
         active: projects.filter((p) => p.status === "In Progress").length,
