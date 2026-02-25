@@ -9,6 +9,8 @@ import {
     deleteDoc,
     query,
     where,
+    orderBy,
+    limit,
     serverTimestamp,
     Timestamp,
 } from "firebase/firestore";
@@ -49,6 +51,23 @@ export interface UserProfile {
     createdAt?: Timestamp;
 }
 
+export type ActivityType =
+    | "user_registered"
+    | "project_created"
+    | "project_updated"
+    | "project_deleted"
+    | "user_updated";
+
+export interface ActivityLog {
+    id?: string;
+    type: ActivityType;
+    userId: string;
+    userName: string;
+    details: string;           // Human-readable sentence
+    metadata?: Record<string, any>;
+    createdAt?: Timestamp;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Projects                                                           */
 /* ------------------------------------------------------------------ */
@@ -62,6 +81,14 @@ export async function createProject(
         ...data,
         createdAt: serverTimestamp(),
     });
+    // Non-blocking activity log
+    logActivity({
+        type: "project_created",
+        userId: data.ownerId,
+        userName: data.ownerName,
+        details: `created project "${data.title}"`,
+        metadata: { projectId: docRef.id, title: data.title },
+    }).catch(() => { });
     return docRef.id;
 }
 
@@ -93,10 +120,30 @@ export async function updateProject(
     data: Partial<ProjectData>
 ): Promise<void> {
     await updateDoc(doc(db, "projects", id), data);
+    // Non-blocking activity log
+    if (data.ownerId || data.ownerName) return; // skip internal-only updates
+    const ownerName = data.ownerName ?? "Admin";
+    const parts: string[] = [];
+    if (data.status) parts.push(`status → ${data.status}`);
+    if (data.progress !== undefined) parts.push(`progress → ${data.progress}%`);
+    logActivity({
+        type: "project_updated",
+        userId: data.ownerId ?? "admin",
+        userName: ownerName,
+        details: `updated project${parts.length ? " (" + parts.join(", ") + ")" : ""}`,
+        metadata: { projectId: id, ...data },
+    }).catch(() => { });
 }
 
-export async function deleteProject(id: string): Promise<void> {
+export async function deleteProject(id: string, meta?: { ownerName?: string; title?: string }): Promise<void> {
     await deleteDoc(doc(db, "projects", id));
+    logActivity({
+        type: "project_deleted",
+        userId: "admin",
+        userName: meta?.ownerName ?? "Admin",
+        details: `deleted project${meta?.title ? ` "${meta.title}"` : ""}`,
+        metadata: { projectId: id, title: meta?.title },
+    }).catch(() => { });
 }
 
 /* ------------------------------------------------------------------ */
@@ -126,6 +173,29 @@ export async function updateUserProfile(
     data: Partial<UserProfile>
 ): Promise<void> {
     await updateDoc(doc(db, "users", uid), data);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Activity Log                                                       */
+/* ------------------------------------------------------------------ */
+
+const activitiesCol = () => collection(db, "activities");
+
+/** Write an activity entry. Always fire-and-forget from callers. */
+export async function logActivity(
+    entry: Omit<ActivityLog, "id" | "createdAt">
+): Promise<void> {
+    await addDoc(activitiesCol(), {
+        ...entry,
+        createdAt: serverTimestamp(),
+    });
+}
+
+/** Fetch the N most recent activity entries (admin dashboard). */
+export async function getRecentActivities(n = 20): Promise<ActivityLog[]> {
+    const q = query(activitiesCol(), orderBy("createdAt", "desc"), limit(n));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as ActivityLog));
 }
 
 /* ------------------------------------------------------------------ */

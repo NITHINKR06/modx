@@ -16,6 +16,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ── Activity Log ──────────────────────────────────────────────────
+    // Any authenticated user can create logs for themselves.
+    // Only admins can read the activity log. No updates/deletes from client.
+    match /activities/{activityId} {
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
     // ── Projects ──────────────────────────────────────────────────────
     // Any authenticated user can read all projects (public explore page).
     // Only the document owner can create / update / delete their projects.

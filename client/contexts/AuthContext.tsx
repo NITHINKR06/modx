@@ -11,7 +11,7 @@ import {
     updateProfile,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { createUserProfile, getUserProfile, isAdminUser } from "@/lib/firestore";
+import { createUserProfile, getUserProfile, isAdminUser, logActivity } from "@/lib/firestore";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -78,6 +78,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             bio: "",
             role: "Member",
         });
+        // Log registration (non-blocking)
+        logActivity({
+            type: "user_registered",
+            userId: cred.user.uid,
+            userName: name,
+            details: `registered a new account`,
+            metadata: { email },
+        }).catch(() => { });
     };
 
     /* -- google ----------------------------------------------------- */
@@ -94,6 +102,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 bio: "",
                 role: "Member",
             });
+            // Log first-time Google sign-in as registration
+            logActivity({
+                type: "user_registered",
+                userId: cred.user.uid,
+                userName: cred.user.displayName || "User",
+                details: `registered via Google`,
+                metadata: { email: cred.user.email },
+            }).catch(() => { });
         }
     };
 
