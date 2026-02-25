@@ -9,6 +9,7 @@ import {
     LogOut,
     ChevronRight,
     Shield,
+    RefreshCw,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -81,8 +82,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                             to={item.path}
                             onClick={() => setSidebarOpen(false)}
                             className={`flex items-center gap-3 px-4 py-[10px] text-[13px] font-medium transition-colors ${isActive(item.path)
-                                    ? "bg-white/15 text-white border-l-[3px] border-white"
-                                    : "text-white/80 hover:bg-white/10 hover:text-white border-l-[3px] border-transparent"
+                                ? "bg-white/15 text-white border-l-[3px] border-white"
+                                : "text-white/80 hover:bg-white/10 hover:text-white border-l-[3px] border-transparent"
                                 }`}
                         >
                             <item.icon size={16} className="flex-shrink-0" />
@@ -113,32 +114,44 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             {/* ── Main content ────────────────────────────────────── */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Top bar */}
-                <header className="h-[48px] flex items-center px-4 md:px-6 border-b" style={{ background: "#79aec8" }}>
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="md:hidden text-white mr-3"
-                    >
-                        <Menu size={20} />
-                    </button>
+                <header className="h-[48px] flex items-center justify-between px-4 md:px-6 border-b" style={{ background: "#79aec8" }}>
+                    <div className="flex items-center">
+                        <button
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            className="md:hidden text-white mr-3"
+                        >
+                            <Menu size={20} />
+                        </button>
 
-                    {/* Breadcrumbs */}
-                    <nav className="flex items-center gap-1 text-[13px]">
-                        <Link to="/admin" className="text-white/80 hover:text-white font-medium">
-                            Home
-                        </Link>
-                        {breadcrumbs.map((bc, i) => (
-                            <React.Fragment key={i}>
-                                <ChevronRight size={12} className="text-white/50" />
-                                {bc.path ? (
-                                    <Link to={bc.path} className="text-white/80 hover:text-white font-medium">
-                                        {bc.label}
-                                    </Link>
-                                ) : (
-                                    <span className="text-white font-semibold">{bc.label}</span>
-                                )}
-                            </React.Fragment>
-                        ))}
-                    </nav>
+                        {/* Breadcrumbs */}
+                        <nav className="flex items-center gap-1 text-[13px]">
+                            <Link to="/admin" className="text-white/80 hover:text-white font-medium">
+                                Home
+                            </Link>
+                            {breadcrumbs.map((bc, i) => (
+                                <React.Fragment key={i}>
+                                    <ChevronRight size={12} className="text-white/50" />
+                                    {bc.path ? (
+                                        <Link to={bc.path} className="text-white/80 hover:text-white font-medium">
+                                            {bc.label}
+                                        </Link>
+                                    ) : (
+                                        <span className="text-white font-semibold">{bc.label}</span>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </nav>
+                    </div>
+
+                    {/* Refresh button */}
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded text-[12px] font-semibold text-white/80 hover:text-white hover:bg-white/15 transition-colors"
+                        title="Refresh page"
+                    >
+                        <RefreshCw size={14} />
+                        Refresh
+                    </button>
                 </header>
 
                 {/* Page content */}

@@ -71,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                         email: firebaseUser.email || "",
                         bio: "",
                         role: "Member",
-                    }).catch(() => { /* silent */ });
+                    }).catch((err) => console.warn("[auto-heal] Failed to create profile:", err));
                 }
             } else {
                 setIsAdmin(false);
