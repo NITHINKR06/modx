@@ -16,13 +16,21 @@ const ALLOWED_ORIGINS = [
 export function createServer() {
   const app = express();
 
+  const isDev = process.env.NODE_ENV !== "production";
+
   // Security headers (X-Frame-Options, CSP, HSTS, X-Content-Type-Options, etc.)
   app.use(
     helmet({
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "https://apis.google.com", "https://www.gstatic.com"],
+          scriptSrc: [
+            "'self'",
+            "https://apis.google.com",
+            "https://www.gstatic.com",
+            // Vite HMR injects inline scripts & uses eval in development
+            ...(isDev ? ["'unsafe-inline'", "'unsafe-eval'"] : []),
+          ],
           styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
           fontSrc: ["'self'", "https://fonts.gstatic.com"],
           imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "https://lh3.googleusercontent.com"],
@@ -32,10 +40,12 @@ export function createServer() {
             "https://*.firebaseio.com",
             "https://api.cloudinary.com",
             "wss://*.firebaseio.com",
+            // Vite HMR uses WebSocket connections in development
+            ...(isDev ? ["ws:", "wss:"] : []),
           ],
           frameSrc: ["'none'"],
           objectSrc: ["'none'"],
-          upgradeInsecureRequests: [],
+          upgradeInsecureRequests: isDev ? null : [],
         },
       },
       crossOriginEmbedderPolicy: false, // Allow Firebase/Google scripts
