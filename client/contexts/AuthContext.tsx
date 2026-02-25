@@ -55,9 +55,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
             if (firebaseUser) {
                 setAdminLoading(true);
-                const admin = await isAdminUser(firebaseUser.uid);
+                const [admin, existingProfile] = await Promise.all([
+                    isAdminUser(firebaseUser.uid),
+                    getUserProfile(firebaseUser.uid),
+                ]);
                 setIsAdmin(admin);
                 setAdminLoading(false);
+
+                // Auto-heal: if user exists in Auth but has no Firestore profile,
+                // create one silently (handles console-created users, failed signups, etc.)
+                if (!existingProfile) {
+                    createUserProfile({
+                        uid: firebaseUser.uid,
+                        name: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
+                        email: firebaseUser.email || "",
+                        bio: "",
+                        role: "Member",
+                    }).catch(() => { /* silent */ });
+                }
             } else {
                 setIsAdmin(false);
                 setAdminLoading(false);
