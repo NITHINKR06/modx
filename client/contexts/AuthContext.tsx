@@ -70,7 +70,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const signIn = async (email: string, password: string, rememberMe = true) => {
         // Set persistence: LOCAL = survives browser restart, SESSION = tab only
         await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
-        await signInWithEmailAndPassword(auth, email, password);
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        // Log login (non-blocking)
+        logActivity({
+            type: "user_logged_in",
+            userId: cred.user.uid,
+            userName: cred.user.displayName || cred.user.email?.split("@")[0] || "User",
+            details: `logged in via email/password`,
+            metadata: { method: "email", email: cred.user.email },
+        }).catch(() => { });
     };
 
 
@@ -120,13 +128,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 bio: "",
                 role: "Member",
             });
-            // Log first-time Google sign-in as registration
+            // First-time Google sign-in → registration event
             logActivity({
                 type: "user_registered",
                 userId: cred.user.uid,
                 userName: cred.user.displayName || "User",
                 details: `registered via Google`,
-                metadata: { email: cred.user.email },
+                metadata: { method: "google", email: cred.user.email },
+            }).catch(() => { });
+        } else {
+            // Returning Google sign-in → login event
+            logActivity({
+                type: "user_logged_in",
+                userId: cred.user.uid,
+                userName: cred.user.displayName || "User",
+                details: `logged in via Google`,
+                metadata: { method: "google", email: cred.user.email },
             }).catch(() => { });
         }
     };

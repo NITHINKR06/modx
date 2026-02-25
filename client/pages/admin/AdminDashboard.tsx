@@ -8,6 +8,7 @@ import {
     Clock,
     Loader2,
     UserPlus,
+    LogIn,
     PlusSquare,
     Edit3,
     Trash2,
@@ -28,6 +29,7 @@ const ACTIVITY_META: Record<
     { icon: React.ElementType; color: string; bg: string }
 > = {
     user_registered: { icon: UserPlus, color: "#417690", bg: "#eef5f9" },
+    user_logged_in: { icon: LogIn, color: "#0e7490", bg: "#e0f7fa" },
     project_created: { icon: PlusSquare, color: "#609b5b", bg: "#edfaed" },
     project_updated: { icon: Edit3, color: "#c4a000", bg: "#fdf8e1" },
     project_deleted: { icon: Trash2, color: "#cc3333", bg: "#fdecea" },
@@ -139,9 +141,9 @@ const AdminDashboard: React.FC = () => {
                                     </div>
                                     <span
                                         className={`text-[11px] px-2 py-0.5 rounded font-medium ${p.status === "In Progress" ? "bg-blue-50 text-blue-700"
-                                                : p.status === "Completed" ? "bg-green-50 text-green-700"
-                                                    : p.status === "On Hold" ? "bg-orange-50 text-orange-700"
-                                                        : "bg-gray-100 text-gray-600"
+                                            : p.status === "Completed" ? "bg-green-50 text-green-700"
+                                                : p.status === "On Hold" ? "bg-orange-50 text-orange-700"
+                                                    : "bg-gray-100 text-gray-600"
                                             }`}
                                     >
                                         {p.status}
@@ -209,7 +211,7 @@ const AdminDashboard: React.FC = () => {
                                         className="text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wide flex-shrink-0 mt-1"
                                         style={{ background: meta.bg, color: meta.color }}
                                     >
-                                        {a.type.replace("_", " ")}
+                                        {(a.type as string).split("_").join(" ")}
                                     </span>
                                 </div>
                             );

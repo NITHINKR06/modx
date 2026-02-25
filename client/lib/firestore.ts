@@ -53,6 +53,7 @@ export interface UserProfile {
 
 export type ActivityType =
     | "user_registered"
+    | "user_logged_in"
     | "project_created"
     | "project_updated"
     | "project_deleted"
