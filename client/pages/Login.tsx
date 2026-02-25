@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, Zap } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { useAuth } from "@/contexts/AuthContext";
+import { isAdminUser } from "@/lib/firestore";
 import { toast } from "sonner";
 
 const Login: React.FC = () => {
@@ -14,23 +15,25 @@ const Login: React.FC = () => {
   const [animReady, setAnimReady] = useState(false);
   const mousePos = useMousePosition();
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle, user } = useAuth();
+  const { signIn, signInWithGoogle, user, isAdmin, adminLoading } = useAuth();
 
   useEffect(() => {
     setTimeout(() => setAnimReady(true), 50);
   }, []);
 
-  // Redirect if already logged in
+  // Redirect if already logged in – admins go to /admin, users to /dashboard
   useEffect(() => {
-    if (user) navigate("/dashboard", { replace: true });
-  }, [user, navigate]);
+    if (user && !adminLoading) {
+      navigate(isAdmin ? "/admin" : "/dashboard", { replace: true });
+    }
+  }, [user, isAdmin, adminLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       await signIn(email, password);
-      navigate("/dashboard");
+      // Auth state change will trigger the useEffect above for redirect
     } catch (err: any) {
       const msg =
         err?.code === "auth/invalid-credential"
@@ -45,7 +48,7 @@ const Login: React.FC = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      navigate("/dashboard");
+      // Auth state change will trigger the useEffect above for redirect
     } catch (err: any) {
       toast.error(err?.message || "Google sign-in failed");
     }
@@ -153,8 +156,8 @@ const Login: React.FC = () => {
                 type="button"
                 onClick={() => setRememberMe(!rememberMe)}
                 className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${rememberMe
-                    ? "bg-primary border-primary"
-                    : "border-border hover:border-primary/60"
+                  ? "bg-primary border-primary"
+                  : "border-border hover:border-primary/60"
                   }`}
               >
                 {rememberMe && (

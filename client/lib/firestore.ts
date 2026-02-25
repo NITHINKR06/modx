@@ -127,3 +127,42 @@ export async function updateUserProfile(
 ): Promise<void> {
     await updateDoc(doc(db, "users", uid), data);
 }
+
+/* ------------------------------------------------------------------ */
+/*  Admin helpers                                                      */
+/* ------------------------------------------------------------------ */
+
+/** Check whether the given UID has a document in the `admins` collection. */
+export async function isAdminUser(uid: string): Promise<boolean> {
+    try {
+        const snap = await getDoc(doc(db, "admins", uid));
+        return snap.exists();
+    } catch {
+        return false;
+    }
+}
+
+/** Fetch every user profile (admin only – rules enforce access). */
+export async function getAllUsers(): Promise<UserProfile[]> {
+    const snap = await getDocs(usersCol());
+    return snap.docs
+        .map((d) => ({ ...d.data(), uid: d.id } as UserProfile))
+        .sort((a, b) => {
+            const aTime = a.createdAt?.toMillis() ?? 0;
+            const bTime = b.createdAt?.toMillis() ?? 0;
+            return bTime - aTime;
+        });
+}
+
+/** Admin: update any user's profile. */
+export async function adminUpdateUser(
+    uid: string,
+    data: Partial<UserProfile>
+): Promise<void> {
+    await updateDoc(doc(db, "users", uid), data);
+}
+
+/** Admin: delete a user's Firestore profile (does NOT delete Firebase Auth account). */
+export async function adminDeleteUser(uid: string): Promise<void> {
+    await deleteDoc(doc(db, "users", uid));
+}

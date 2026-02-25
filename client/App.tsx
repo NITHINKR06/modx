@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminRoute from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import Features from "./pages/Features";
 import About from "./pages/About";
@@ -17,6 +18,10 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminProjects from "./pages/admin/AdminProjects";
+import AdminUserDetail from "./pages/admin/AdminUserDetail";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +44,11 @@ export const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            {/* Admin routes */}
+            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+            <Route path="/admin/users/:userId" element={<AdminRoute><AdminUserDetail /></AdminRoute>} />
+            <Route path="/admin/projects" element={<AdminRoute><AdminProjects /></AdminRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -49,3 +59,4 @@ export const App = () => (
 );
 
 export default App;
+

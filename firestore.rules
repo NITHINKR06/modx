@@ -2,9 +2,24 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ── Helper: is the caller an admin? ──────────────────────────────
+    function isAdmin() {
+      return request.auth != null
+             && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // ── Admins collection ────────────────────────────────────────────
+    // Authenticated users can read their own doc (to detect admin status).
+    // No client-side writes – manage this collection only from Firebase Console.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
     // ── Projects ──────────────────────────────────────────────────────
     // Any authenticated user can read all projects (public explore page).
     // Only the document owner can create / update / delete their projects.
+    // Admins can read / write / delete ANY project.
     match /projects/{projectId} {
       allow read: if request.auth != null;
 
@@ -12,14 +27,18 @@ service cloud.firestore {
                     && request.resource.data.ownerId == request.auth.uid;
 
       allow update, delete: if request.auth != null
-                            && resource.data.ownerId == request.auth.uid;
+                            && (resource.data.ownerId == request.auth.uid
+                                || isAdmin());
     }
 
     // ── User Profiles ─────────────────────────────────────────────────
     // Each user can only read and write their own profile document.
+    // Admins can read and write ANY user profile.
     match /users/{userId} {
-      allow read, write: if request.auth != null
-                         && request.auth.uid == userId;
+      allow read: if request.auth != null
+                  && (request.auth.uid == userId || isAdmin());
+      allow write: if request.auth != null
+                   && (request.auth.uid == userId || isAdmin());
     }
   }
 }

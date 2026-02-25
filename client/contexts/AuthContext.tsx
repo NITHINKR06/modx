@@ -11,7 +11,7 @@ import {
     updateProfile,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { createUserProfile, getUserProfile } from "@/lib/firestore";
+import { createUserProfile, getUserProfile, isAdminUser } from "@/lib/firestore";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -20,6 +20,8 @@ import { createUserProfile, getUserProfile } from "@/lib/firestore";
 interface AuthContextType {
     user: User | null;
     loading: boolean;
+    isAdmin: boolean;
+    adminLoading: boolean;
     signIn: (email: string, password: string) => Promise<void>;
     signUp: (email: string, password: string, name: string) => Promise<void>;
     signInWithGoogle: () => Promise<void>;
@@ -38,11 +40,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [adminLoading, setAdminLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             setUser(firebaseUser);
             setLoading(false);
+
+            if (firebaseUser) {
+                setAdminLoading(true);
+                const admin = await isAdminUser(firebaseUser.uid);
+                setIsAdmin(admin);
+                setAdminLoading(false);
+            } else {
+                setIsAdmin(false);
+                setAdminLoading(false);
+            }
         });
         return unsubscribe;
     }, []);
@@ -98,6 +112,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             value={{
                 user,
                 loading,
+                isAdmin,
+                adminLoading,
                 signIn,
                 signUp,
                 signInWithGoogle,
